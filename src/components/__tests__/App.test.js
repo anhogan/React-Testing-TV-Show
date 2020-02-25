@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, wait, waitForElement, fireEvent, getByText } from '@testing-library/react';
+import { render, wait, waitForElement, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { fetchShow as mockFetchShow } from '../../api/fetchShow';
 import App from '../../App';
@@ -12,14 +12,16 @@ const episodes = {
   ]
 };
 
-test('App fetches renders main data', async () => {
+test('App fetches and renders main data', async () => {
   mockFetchShow.mockResolvedValueOnce(episodes);
 
-  const { getByText, getByTestId, rerender } = render(<App />);
+  const { getByText, rerender } = render(<App />);
 
   expect(mockFetchShow).toHaveBeenCalledTimes(1);
   
   getByText(/fetching data.../i);
+
+  rerender(<App />);
 
   await waitForElement(() => {
     getByText(/stranger things/i);
